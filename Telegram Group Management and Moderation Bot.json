@@ -1,0 +1,1229 @@
+{
+  "name": "Telegram Group Management and Moderation Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "chatId",
+              "value": "={{ $json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "adminChatId",
+              "value": "={{ $json.message.from.is_bot }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "warningThreshold",
+              "value": 3,
+              "type": "number"
+            },
+            {
+              "id": "id-4",
+              "name": "badWords",
+              "value": "[\"spam\", \"scam\", \"fake\"]",
+              "type": "array"
+            },
+            {
+              "id": "id-5",
+              "name": "floodLimit",
+              "value": 5,
+              "type": "number"
+            },
+            {
+              "id": "id-6",
+              "name": "floodTimeWindow",
+              "value": 60,
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "0c2eb144-4823-4240-abfa-36c2ff31a744",
+      "name": "Workflow Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -464,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "updates": [
+          "callback_query"
+        ],
+        "additionalFields": {
+          "chatIds": ""
+        }
+      },
+      "id": "19eecc2c-227d-47e7-aa58-316840f5fcd7",
+      "name": "Telegram Bot Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        752
+      ],
+      "webhookId": "4494c871-aff5-48e5-9538-a91bb5b92421",
+      "credentials": {
+        "telegramApi": {
+          "id": "5KGRcG7A4NHrBfqm",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.new_chat_members }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "any",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "New Member"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.left_chat_member }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "any",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Member Left"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "any",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Regular Message"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/stats",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "/stats Command"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/mute",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "/mute Command"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/rules",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "/rules Command"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/announce",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "/announce Command"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b6cdb8d9-8a22-4cbf-b8f8-efb76d8516c1",
+      "name": "Route Message Type",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -288,
+        624
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "warnings"
+        },
+        "returnAll": true,
+        "where": {
+          "values": [
+            {
+              "column": "user_id",
+              "value": "={{ $json.message.from.id }}"
+            },
+            {
+              "column": "chat_id",
+              "value": "={{ $('Workflow Configuration').item.json.chatId }}"
+            }
+          ]
+        },
+        "options": {
+          "outputColumns": [
+            "COUNT(*) as warning_count"
+          ]
+        }
+      },
+      "id": "4029dae4-77dd-42cc-9b95-198d7c675cd2",
+      "name": "Check User Warnings",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        240,
+        656
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "tRuv7gDiaT3rhp7e",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "members"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $json.id }}",
+            "username": "={{ $json.username }}",
+            "first_name": "={{ $json.first_name }}",
+            "joined_at": "=NOW()",
+            "chat_id": "={{ $('Workflow Configuration').item.json.chatId }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "e3e35812-dcda-4330-8530-68aba3beecda",
+      "name": "Save Member Join",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        928,
+        1008
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "tRuv7gDiaT3rhp7e",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "member_leaves"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $json.message.left_chat_member.id }}",
+            "username": "={{ $json.message.left_chat_member.username }}",
+            "left_at": "=NOW()",
+            "chat_id": "={{ $('Workflow Configuration').item.json.chatId }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "fca17c60-362b-4496-83e4-42b0ad0bc9d0",
+      "name": "Save Member Leave",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -16,
+        400
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "tRuv7gDiaT3rhp7e",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "warnings"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $json.message.from.id }}",
+            "chat_id": "={{ $('Workflow Configuration').item.json.chatId }}",
+            "reason": "={{ $json.violations.hasLinks ? 'Links' : $json.violations.hasBadWords ? 'Bad words' : 'Forwarded message' }}",
+            "warned_at": "=NOW()"
+          },
+          "matchingColumns": [
+            "user_id",
+            "chat_id",
+            "reason",
+            "warned_at"
+          ],
+          "schema": [
+            {
+              "id": "user_id",
+              "displayName": "user_id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "chat_id",
+              "displayName": "chat_id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "reason",
+              "displayName": "reason",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "warned_at",
+              "displayName": "warned_at",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d01c8f45-61e5-48b3-9617-a68f618e087d",
+      "name": "Add Warning",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        768,
+        720
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "tRuv7gDiaT3rhp7e",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=SELECT (SELECT COUNT(*) FROM members WHERE chat_id = {{ $('Workflow Configuration').item.json.chatId }}) as total_members, (SELECT COUNT(*) FROM warnings WHERE chat_id = {{ $('Workflow Configuration').item.json.chatId }}) as total_warnings, (SELECT COUNT(*) FROM member_leaves WHERE chat_id = {{ $('Workflow Configuration').item.json.chatId }}) as total_leaves",
+        "options": {}
+      },
+      "id": "a0719b14-6e23-45dc-8152-8663782eb7ff",
+      "name": "Get Group Statistics",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        -16,
+        528
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "tRuv7gDiaT3rhp7e",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Workflow Configuration').item.json.chatId }}",
+        "text": "=Welcome to the group, {{ $json.first_name }}! Please read the rules with /rules command.",
+        "additionalFields": {}
+      },
+      "id": "0e8bd0ba-0d18-47bc-ad5a-72e0ae3267ca",
+      "name": "Send Welcome Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1104,
+        1008
+      ],
+      "webhookId": "5ce49f2a-5cee-4346-8d1e-3a688674ea8a",
+      "credentials": {
+        "telegramApi": {
+          "id": "Mkx9AhsSvndGYUUb",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "deleteMessage",
+        "chatId": "={{ $('Workflow Configuration').item.json.chatId }}{{ $('Telegram Bot Trigger').item.json.message.text }}",
+        "messageId": "={{ $json.message.message_id }}"
+      },
+      "id": "b011d7f6-ceeb-4bae-b3fe-17745e1d9ab1",
+      "name": "Delete Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        784
+      ],
+      "webhookId": "dc823614-a3e2-4829-a01a-7eff5b613e60",
+      "credentials": {
+        "telegramApi": {
+          "id": "me8bqq2YGyVgjEzr",
+          "name": "Telegram account 10"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Workflow Configuration').item.json.chatId }}{{ $('Telegram Bot Trigger').item.json.message.text }}",
+        "text": "=⚠️ Warning issued to @{{ $json.message.from.username }}. Total warnings: {{ $json.warning_count }}. Next violation will result in a ban.",
+        "additionalFields": {}
+      },
+      "id": "365f762d-2e25-4dcf-a54a-1de0e579f3cf",
+      "name": "Send Warning Message",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1104,
+        720
+      ],
+      "webhookId": "4cfb40b2-7708-4c87-8432-f9f62e074a99",
+      "credentials": {
+        "telegramApi": {
+          "id": "BCgAxbdXbhtMxVku",
+          "name": "Telegram account 13"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "kickChatMember"
+      },
+      "id": "f5f8b392-39ee-4cfb-950a-8b94ef242f07",
+      "name": "Ban User",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1104,
+        864
+      ],
+      "webhookId": "d78d6abf-6c0a-4f43-9a4e-8828052b171a",
+      "credentials": {
+        "telegramApi": {
+          "id": "IMd9IEiKbRaHd95t",
+          "name": "Telegram account 14"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "chatId": "={{ $('Telegram Bot Trigger').item.json.message.text }}"
+      },
+      "id": "c9ff91a3-8678-4122-8b1e-f7330630db7a",
+      "name": "Mute User",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        656
+      ],
+      "webhookId": "ab9e6202-6890-45c6-a395-f83ba292e450",
+      "credentials": {
+        "telegramApi": {
+          "id": "2kKOdkpAirfmWNea",
+          "name": "Telegram account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Workflow Configuration').item.json.chatId }}{{ $('Telegram Bot Trigger').item.json.message.text }}",
+        "text": "=📊 Group Statistics:\n👥 Total Members: {{ $json.total_members }}\n⚠️ Total Warnings: {{ $json.total_warnings }}\n👋 Members Left: {{ $json.total_leaves }}",
+        "additionalFields": {}
+      },
+      "id": "3fc6270e-bf72-488b-9cac-7ba9ebb65046",
+      "name": "Send Statistics",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        528
+      ],
+      "webhookId": "e22b6661-1d35-43aa-b08a-db10708e4307",
+      "credentials": {
+        "telegramApi": {
+          "id": "fGNIF1khI1BihRBT",
+          "name": "Telegram account 8"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Workflow Configuration').item.json.chatId }}{{ $('Telegram Bot Trigger').item.json.message.text }}",
+        "text": "📜 Group Rules:\n1. No spam or advertising\n2. Be respectful to all members\n3. No links without admin approval\n4. No forwarded messages from channels\n5. Keep conversations on-topic\n\n⚠️ Violations will result in warnings. 3 warnings = automatic ban.",
+        "additionalFields": {}
+      },
+      "id": "70660d5a-6102-44a4-b3da-0a9647d339a7",
+      "name": "Send Rules",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        784
+      ],
+      "webhookId": "1ed614b1-3d12-44a6-aaea-cf9d7480b81f",
+      "credentials": {
+        "telegramApi": {
+          "id": "lPieOoZTyGi3ImGc",
+          "name": "Telegram account 7"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Workflow Configuration').item.json.chatId }}{{ $('Telegram Bot Trigger').item.json.message.text }}",
+        "text": "=📢 Announcement:\n\n{{ $json.message.text.replace('/announce ', '') }}",
+        "additionalFields": {}
+      },
+      "id": "ee9cbabd-75f9-4b7e-ba01-8e13dfe009f3",
+      "name": "Send Announcement",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        928
+      ],
+      "webhookId": "59d56e41-022f-4ff1-a78d-c79337be655a",
+      "credentials": {
+        "telegramApi": {
+          "id": "Bi6mPZyDYPqvDN8C",
+          "name": "Telegram account 6"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const newMember = $input.item.json.message.new_chat_members[0];\nconst hasPhoto = newMember.has_photo || false;\nconst username = newMember.username || '';\nconst suspiciousPattern = /bot|spam|fake|admin/i;\nconst isSpam = !hasPhoto || suspiciousPattern.test(username);\n\nreturn { json: { ...newMember, isSpam } };"
+      },
+      "id": "f139652a-49b3-49f9-97b1-3234a0a6cee6",
+      "name": "Check Spam Account",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const message = $input.item.json.message;\nconst text = message.text || '';\nconst badWords = $('Workflow Configuration').item.json.badWords;\n\nconst hasLinks = /https?:\\/\\//i.test(text);\nconst hasBadWords = badWords.some(word => text.toLowerCase().includes(word));\nconst isForwarded = message.forward_from_chat?.type === 'channel';\n\nconst violations = {\n  hasLinks,\n  hasBadWords,\n  isForwarded,\n  hasViolation: hasLinks || hasBadWords || isForwarded\n};\n\nreturn {\n  json: {\n    ...message,\n    violations\n  }\n};"
+      },
+      "id": "6ab4e6cc-555f-45e2-a2a7-35afb5888451",
+      "name": "Check Message Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        272,
+        928
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $json.message.from.status }}",
+              "rightValue": "administrator",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "id-2",
+              "leftValue": "={{ $json.message.from.status }}",
+              "rightValue": "creator",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "c147e009-f24d-457e-8f6c-ad25465a4f5a",
+      "name": "Is Admin",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -16,
+        1072
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $('Check Spam Account').item.json.isSpam }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4c97884d-e3ce-40ba-8c3f-15055ceac8fd",
+      "name": "Is Spam Account",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        608,
+        864
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $('Check Message Content').item.json.violations.hasViolation }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9052eaee-2b65-4ed2-ac90-6702ede0e463",
+      "name": "Has Violations",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        464,
+        928
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $json.warning_count }}",
+              "rightValue": "={{ $('Workflow Configuration').item.json.warningThreshold }}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4513c3f7-fc96-49dd-a47a-25e3fad663e1",
+      "name": "Warning Threshold Reached",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        928,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "1b2b13b5-6eb8-442a-9622-7bbc97b9c569",
+      "name": "Daily Report Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        768,
+        432
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "45dd04ee-36d9-4e04-a4ec-991cb7616144",
+      "name": "Weekly Statistics Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        768,
+        576
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*) as new_members, (SELECT COUNT(*) FROM warnings WHERE DATE(warned_at) = CURRENT_DATE) as warnings_today, (SELECT COUNT(*) FROM member_leaves WHERE DATE(left_at) = CURRENT_DATE) as leaves_today FROM members WHERE DATE(joined_at) = CURRENT_DATE",
+        "options": {}
+      },
+      "id": "ac11f446-f4c0-4454-ae67-d6c0ce125c11",
+      "name": "Get Daily Activity",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        928,
+        432
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "tRuv7gDiaT3rhp7e",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*) as new_members_week, (SELECT COUNT(*) FROM warnings WHERE warned_at >= CURRENT_DATE - INTERVAL '7 days') as warnings_week, (SELECT COUNT(*) FROM member_leaves WHERE left_at >= CURRENT_DATE - INTERVAL '7 days') as leaves_week FROM members WHERE joined_at >= CURRENT_DATE - INTERVAL '7 days'",
+        "options": {}
+      },
+      "id": "757d2b7f-ea61-4792-8b1e-cd0c4eb98df1",
+      "name": "Get Weekly Growth",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        928,
+        576
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "tRuv7gDiaT3rhp7e",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "@ParsiBazHa_bot",
+        "text": "=📊 Daily Activity Report:\n\n👥 New Members: {{ $json.new_members }}\n⚠️ Warnings Issued: {{ $json.warnings_today }}\n👋 Members Left: {{ $json.leaves_today }}",
+        "additionalFields": {}
+      },
+      "id": "a3ae51b4-29b7-4e4d-82a2-4d398644f85d",
+      "name": "Send Daily Report",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1104,
+        432
+      ],
+      "webhookId": "65f5d1af-91fd-416b-97ef-78260146bef2",
+      "credentials": {
+        "telegramApi": {
+          "id": "nlbXsNkm6iKXY5eU",
+          "name": "Telegram account 11"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "@ParsiBazHa_bot",
+        "text": "=📈 Weekly Growth Report:\n\n👥 New Members This Week: {{ $json.new_members_week }}\n⚠️ Warnings This Week: {{ $json.warnings_week }}\n👋 Members Left This Week: {{ $json.leaves_week }}",
+        "additionalFields": {}
+      },
+      "id": "0d8bbae9-6550-45d5-88c4-3b2b9f2b50f6",
+      "name": "Send Weekly Report",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1104,
+        576
+      ],
+      "webhookId": "d45c8439-db18-445b-bdc9-dfae807296f4",
+      "credentials": {
+        "telegramApi": {
+          "id": "E94heubgWPgidm1S",
+          "name": "Telegram account 12"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Bot Trigger": {
+      "main": [
+        [
+          {
+            "node": "Workflow Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Configuration": {
+      "main": [
+        [
+          {
+            "node": "Route Message Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Message Type": {
+      "main": [
+        [
+          {
+            "node": "Check Spam Account",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Save Member Leave",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Admin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Group Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mute User",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Rules",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Announcement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Spam Account": {
+      "main": [
+        [
+          {
+            "node": "Is Spam Account",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Spam Account": {
+      "main": [
+        [
+          {
+            "node": "Ban User",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Save Member Join",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Member Join": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Admin": {
+      "main": [
+        [
+          {
+            "node": "Check User Warnings",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check Message Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Message Content": {
+      "main": [
+        [
+          {
+            "node": "Has Violations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Violations": {
+      "main": [
+        [
+          {
+            "node": "Delete Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Message": {
+      "main": [
+        [
+          {
+            "node": "Check User Warnings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check User Warnings": {
+      "main": [
+        [
+          {
+            "node": "Add Warning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Warning": {
+      "main": [
+        [
+          {
+            "node": "Warning Threshold Reached",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Warning Threshold Reached": {
+      "main": [
+        [
+          {
+            "node": "Ban User",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Warning Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Group Statistics": {
+      "main": [
+        [
+          {
+            "node": "Send Statistics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Report Schedule": {
+      "main": [
+        [
+          {
+            "node": "Get Daily Activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Daily Activity": {
+      "main": [
+        [
+          {
+            "node": "Send Daily Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Statistics Schedule": {
+      "main": [
+        [
+          {
+            "node": "Get Weekly Growth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Weekly Growth": {
+      "main": [
+        [
+          {
+            "node": "Send Weekly Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "12c9ed51-7ac5-4f7d-a4bf-c5d9ae5c1666",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "90ef43ae17949ae78c76975ec7a1bb1548031bf079b54734fd0b546db7b07dc1"
+  },
+  "id": "EYtxnEuAUihmn6dC",
+  "tags": []
+}
