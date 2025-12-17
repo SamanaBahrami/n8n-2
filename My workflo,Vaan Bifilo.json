@@ -1,0 +1,1513 @@
+{
+  "name": "My workflo,Vaan Bifilo",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "id": "8c6ded4f-6e43-46f4-9323-03477c22339d",
+      "name": "Telegram Bot Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1536,
+        -1504
+      ],
+      "webhookId": "c4308845-87ae-4010-8968-3fde18b5b063",
+      "credentials": {
+        "telegramApi": {
+          "id": "Mkx9AhsSvndGYUUb",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "siteUrl",
+              "value": "<__PLACEHOLDER_VALUE__WordPress Site URL__>https://bifilo.com/wp-admin/user-new.php",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "brandName",
+              "value": "Bifilo",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "watermarkPath",
+              "value": "1bgkk4T5omAfmdB5rIV0v6J_JTnmuqN5kTvGHDJurqIU/edit?gid=0#gid=0",
+              "type": "string"
+            },
+            {
+              "id": "id-4",
+              "name": "timezone",
+              "value": "Asia/Tehran",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "44622f90-c011-4ba5-ba69-2386e7735078",
+      "name": "Workflow Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1536,
+        -1664
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "id-1",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "🛠️ مدیریت وبسایت",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Website Management"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "id-2",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "📦 پردازش محصولات",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Product Processing"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "id-3",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "📝 تولید مقالات",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Article Generation"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "id-4",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "🎯 ساخت تبلیغات",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Ad Creation"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "id-5",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "📁 آپلود IDPLR",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "IDPLR Upload"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "86187f10-70d8-4b8d-ae8b-425580c83a45",
+      "name": "Route Menu Selection",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -1360,
+        -1712
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Workflow Configuration').first().json.siteUrl }}",
+        "options": {
+          "allowUnauthorizedCerts": true,
+          "timeout": 30000
+        }
+      },
+      "id": "e3b8611f-8409-42ca-8114-a09d57254644",
+      "name": "Check Site Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -1072,
+        -1280
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "678debd4-d56e-400c-ab68-a9c90dc9b81d",
+      "name": "Gemini Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        -1296
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "PCii8rJ3w6clWYJg",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Bot Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "1b5e4a8b-6541-43f1-9883-2cfafbdead09",
+      "name": "Send Health Report",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        112,
+        -1296
+      ],
+      "webhookId": "476eecbe-6acd-4eda-a607-3376ea214bcb",
+      "credentials": {
+        "telegramApi": {
+          "id": "Mkx9AhsSvndGYUUb",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1bgkk4T5omAfmdB5rIV0v6J_JTnmuqN5kTvGHDJurqIU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Downloadable_Products",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "d65d71ea-d7f0-4ff3-9f1a-4bd36b5b2fc0",
+      "name": "Read Products Excel",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1072,
+        -1760
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "iN8bORJRvHPUVIgD",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.Image_URL }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "40b204ca-1099-4697-a32f-9589d81376ea",
+      "name": "Download Product Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -464,
+        -1728
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "multiStep",
+        "operations": {
+          "operations": [
+            {
+              "operation": "resize",
+              "width": 800,
+              "height": 800
+            },
+            {
+              "operation": "composite",
+              "dataPropertyNameComposite": "={{ $('Workflow Configuration').first().json.watermarkPath }}"
+            }
+          ]
+        },
+        "options": {
+          "format": "jpeg",
+          "quality": 85
+        }
+      },
+      "id": "004d8b2a-50a6-4459-a947-9fd38e67eff3",
+      "name": "Add Watermark & Resize",
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        -1728
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "product",
+        "operation": "create",
+        "name": "={{ $('Product Content Optimizer').first().json.output.optimizedTitle }}",
+        "additionalFields": {
+          "categories": "={{ $('Product Content Optimizer').first().json.output.category }}",
+          "description": "={{ $('Product Content Optimizer').first().json.output.optimizedDescription }}",
+          "downloadable": true,
+          "regularPrice": "={{ $('Read Products Excel').first().json.Price }}",
+          "shortDescription": "={{ $('Product Content Optimizer').first().json.output.excerpt }}",
+          "status": "={{ $('Read Products Excel').first().json.Status ? $('Read Products Excel').first().json.Status.toLowerCase() : 'publish' }}",
+          "stockStatus": "instock",
+          "type": "simple"
+        },
+        "dimensionsUi": {},
+        "imagesUi": {
+          "imagesValues": [
+            {
+              "alt": "={{ $('Product Content Optimizer').first().json.output.optimizedTitle }}",
+              "src": "={{ $('Add Watermark & Resize').first().binary.data.data }}",
+              "name": "={{ $('Read Products Excel').first().json.Product_Name }}"
+            }
+          ]
+        },
+        "metadataUi": {
+          "metadataValues": [
+            {
+              "key": "_downloadable_files",
+              "value": "={{ JSON.stringify([{ name: $('Read Products Excel').first().json.Product_Name, file: $('Read Products Excel').first().json.File_URL || $('Read Products Excel').first().json.Download_Link }]) }}"
+            }
+          ]
+        }
+      },
+      "id": "cf809e85-1a85-4d9b-a8f7-e66ad2aef8ca",
+      "name": "Create WooCommerce Product",
+      "type": "n8n-nodes-base.wooCommerce",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -1728
+      ],
+      "credentials": {
+        "wooCommerceApi": {
+          "id": "aa1XZJcSxsSnjjWV",
+          "name": "WooCommerce account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Bot Trigger').first().json.message.chat.id }}",
+        "text": "=✅ محصول \"{{ $('Product Content Optimizer').first().json.output.optimizedTitle }}\" با موفقیت آپلود شد\n\n🆔 شناسه پروژه: {{ $('Read Products Excel').first().json.Project_ID }}\n📎 لینک: {{ $json.permalink }}\n📂 دسته‌بندی: {{ $('Product Content Optimizer').first().json.output.category }}\n💰 قیمت: {{ $('Read Products Excel').first().json.Price }} تومان\n📥 فایل دانلود: {{ $('Read Products Excel').first().json.File_URL || $('Read Products Excel').first().json.Download_Link }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "6a1b7a4b-5caf-49f4-857d-4b078997f1d1",
+      "name": "Send Product Confirmation",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        112,
+        -1728
+      ],
+      "webhookId": "ff1efc67-43bc-4799-b4e5-c3790c02f170",
+      "credentials": {
+        "telegramApi": {
+          "id": "Mkx9AhsSvndGYUUb",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1bgkk4T5omAfmdB5rIV0v6J_JTnmuqN5kTvGHDJurqIU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Downloadable_Products",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "0031ca1c-4596-499a-8b7e-cf2825ecc922",
+      "name": "Read Article Topics",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1072,
+        -1600
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "iN8bORJRvHPUVIgD",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "multiStep",
+        "operations": {
+          "operations": [
+            {
+              "operation": "create",
+              "backgroundColor": "#f0f0f0",
+              "width": 1200,
+              "height": 630
+            },
+            {
+              "operation": "text",
+              "text": "={{ $json.title }}",
+              "fontSize": 48,
+              "positionX": 100,
+              "positionY": 250,
+              "lineLength": 40
+            },
+            {
+              "operation": "composite",
+              "dataPropertyNameComposite": "={{ $('Workflow Configuration').first().json.watermarkPath }}",
+              "positionX": 1000,
+              "positionY": 530
+            }
+          ]
+        },
+        "options": {
+          "format": "jpeg",
+          "quality": 90
+        }
+      },
+      "id": "3f5bd0b8-d8bd-4119-891f-d19588c65c9d",
+      "name": "Create Featured Image",
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        -464,
+        -1536
+      ]
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Article Generator Agent').first().json.output.title }}",
+        "additionalFields": {
+          "content": "={{ $('Article Generator Agent').first().json.output.content }}",
+          "status": "publish",
+          "categories": "={{ $('Article Generator Agent').first().json.output.category }}",
+          "tags": "={{ $('Article Generator Agent').first().json.output.tags }}"
+        }
+      },
+      "id": "1aaa4385-59b1-4dcc-9063-26e9aa51118d",
+      "name": "Publish WordPress Post",
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        -1536
+      ],
+      "credentials": {
+        "wordpressApi": {
+          "id": "DmoEwzCxCyE4GSrV",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1bgkk4T5omAfmdB5rIV0v6J_JTnmuqN5kTvGHDJurqIU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Downloadable_Products",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Status": "Published",
+            "Published_Date": "={{ $now.toFormat('yyyy-MM-dd') }}"
+          },
+          "matchingColumns": [
+            "rowNumber"
+          ],
+          "schema": [
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Published_Date",
+              "displayName": "Published_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "rowNumber",
+              "displayName": "rowNumber",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "eb929e79-b7ce-46aa-b560-bd6065f09090",
+      "name": "Update Article Status",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -64,
+        -1584
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "iN8bORJRvHPUVIgD",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Bot Trigger').first().json.message.chat.id }}",
+        "text": "=✅ مقاله \"{{ $('Article Generator Agent').first().json.output.title }}\" منتشر شد\n\n📎 لینک: {{ $('Publish WordPress Post').first().json.link }}\n📊 تعداد کلمات: {{ $('Article Generator Agent').first().json.output.content.split(\" \").length }}\n🏷️ دسته‌بندی: {{ $('Article Generator Agent').first().json.output.category }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "c0ac0243-f716-45c7-a095-9ab2f7dcbd57",
+      "name": "Send Article Confirmation",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        112,
+        -1584
+      ],
+      "webhookId": "d5040442-3420-4bd8-b889-731b9649444a",
+      "credentials": {
+        "telegramApi": {
+          "id": "Mkx9AhsSvndGYUUb",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 3,
+        "options": {
+          "order": "desc",
+          "orderBy": "date",
+          "status": "publish"
+        }
+      },
+      "id": "804bf133-a8d4-4311-9494-5315553f2a8e",
+      "name": "Get Products for Ads",
+      "type": "n8n-nodes-base.wooCommerce",
+      "typeVersion": 1,
+      "position": [
+        -1072,
+        -1456
+      ],
+      "credentials": {
+        "wooCommerceApi": {
+          "id": "aa1XZJcSxsSnjjWV",
+          "name": "WooCommerce account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1bgkk4T5omAfmdB5rIV0v6J_JTnmuqN5kTvGHDJurqIU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Downloadable_Products",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $now.toFormat('yyyy-MM-dd') }}",
+            "Product_Name": "={{ $('Get Products for Ads').first().json.name }}",
+            "Platform": "Multi-Platform",
+            "Content": "={{ JSON.stringify($('Ad Content Generator').first().json.output) }}",
+            "Status": "Generated"
+          },
+          "matchingColumns": [
+            "Date"
+          ],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product_Name",
+              "displayName": "Product_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Content",
+              "displayName": "Content",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "5ae65a04-2e2a-4cec-bbd2-3fff6deb2fd8",
+      "name": "Save Ad Content",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -64,
+        -1440
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "iN8bORJRvHPUVIgD",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Bot Trigger').first().json.message.chat.id }}",
+        "text": "=🎯 تبلیغات محصول: {{ $('Get Products for Ads').first().json.name }}\n\n📱 اینستاگرام:\n{{ $('Ad Content Generator').first().json.output.instagram.caption }}\n{{ $('Ad Content Generator').first().json.output.instagram.hashtags.join(\" \") }}\n\n🐦 توییتر:\n{{ $('Ad Content Generator').first().json.output.twitter.tweet }}\n\n📢 گوگل ادز:\nHeadlines: {{ $('Ad Content Generator').first().json.output.googleAds.headlines.join(\" | \") }}\nDescriptions: {{ $('Ad Content Generator').first().json.output.googleAds.descriptions.join(\" | \") }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "67f1b18f-3b83-4f0b-a24c-6cfaa6f598a8",
+      "name": "Send Ad Content",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        112,
+        -1440
+      ],
+      "webhookId": "6624a845-7139-42d9-b829-bf764234a622",
+      "credentials": {
+        "telegramApi": {
+          "id": "Mkx9AhsSvndGYUUb",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "id": "107bea21-da09-4030-82d6-475e282fb4fb",
+      "name": "Daily Article Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1360,
+        -1472
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "fe9b0d0d-7bb6-47cd-bb05-cc79159a89d4",
+      "name": "Health Check Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1248,
+        -1376
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze the website health check response and provide SEO recommendations: {{ $json }}",
+        "options": {
+          "systemMessage": "You are an expert SEO analyst and WordPress site health specialist.\n\nYour task is to:\n1. Analyze the website health check data provided\n2. Identify critical issues (SSL expiration, downtime, broken links, outdated plugins)\n3. Provide SEO analysis including meta tags, keyword density, heading structure\n4. Suggest specific improvements with step-by-step instructions\n5. Prioritize issues by severity (Critical, High, Medium, Low)\n\nReturn your analysis in a clear, structured format in Persian language with emojis for better readability."
+        }
+      },
+      "id": "1fd0a1dc-efd7-4e94-a6b8-10e0c6b89f21",
+      "name": "SEO Analysis Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -752,
+        -1424
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Optimize this product content for SEO and Bifilo brand: Product Name: {{ $json.Product_Name }}, Description: {{ $json.Description }}, Category: {{ $json.Category }}, Project ID: {{ $json.Project_ID }}",
+        "options": {
+          "systemMessage": "You are a professional content optimizer and SEO specialist for Bifilo, a digital products marketplace.\n\nYour task is to:\n1. Rewrite the product description while preserving the original meaning\n2. Add relevant SEO keywords naturally\n3. Create an engaging short excerpt (150-200 characters)\n4. Integrate Bifilo brand messaging subtly\n5. Generate optimized meta title and meta description\n6. Ensure the category matches EXACTLY one of these allowed categories:\n   - Business and Monetization\n   - Marketing and Advertising\n   - Media and Social Networks\n   - Web and Development\n   - Computers and Technology\n   - WordPress\n   - Software\n   - Tutorials and Exercises\n   - Templates and Themes\n   - Graphics and Design\n   - Weight Loss and Metabolism\n   - Fitness and Training\n   - Health and Diseases\n   - Diet and Cooking\n   - Psychology and Self-Help\n   - Parenting and Family\n   - Dating and Relationships\n   - Spirituality and Alternatives\n   - Hobbies and Leisure\n   - Sports and Outdoors\n   - Lifestyle and Travel\n   - Beauty and Fashion\n   - Pets and Other Animals\n   - Renewable and Eco-Friendly Energy\n   - Article\n\nReturn a JSON object with these fields:\n{\n  \"optimizedTitle\": \"...\",\n  \"optimizedDescription\": \"...\",\n  \"excerpt\": \"...\",\n  \"metaTitle\": \"...\",\n  \"metaDescription\": \"...\",\n  \"category\": \"...\"\n}\n\nWrite in Persian language with professional tone."
+        }
+      },
+      "id": "dbfec3f5-e18e-4539-b59c-c5c3f23d7a39",
+      "name": "Product Content Optimizer",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -752,
+        -1808
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a comprehensive SEO-optimized article about: {{ $json.Topic }} with keywords: {{ $json.Keywords }}",
+        "options": {
+          "systemMessage": "You are a professional content writer and SEO specialist for Bifilo.\n\nYour task is to:\n1. Write a comprehensive article of at least 1200 words\n2. Structure: Engaging introduction + 3-5 main sections + Conclusion\n3. Use professional yet friendly tone in Persian\n4. SEO optimization:\n   - Include main keyword in title, introduction, and conclusion\n   - Keyword density: 1-2%\n   - Use LSI keywords naturally\n   - Optimize H2 and H3 headings\n5. Add internal links to related Bifilo products\n6. Include clear CTA for product purchases\n7. Generate a compelling featured image description\n\nReturn a JSON object:\n{\n  \"title\": \"...\",\n  \"content\": \"... (HTML formatted)\",\n  \"excerpt\": \"...\",\n  \"metaTitle\": \"...\",\n  \"metaDescription\": \"...\",\n  \"tags\": [\"...\"],\n  \"category\": \"...\",\n  \"imagePrompt\": \"...\"\n}"
+        }
+      },
+      "id": "b10bd40c-3823-4897-a19c-18ee8dd096b9",
+      "name": "Article Generator Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -752,
+        -1680
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Generate advertising content for this product: Name: {{ $json.name }}, Description: {{ $json.description }}, Price: {{ $json.price }}, URL: {{ $json.permalink }}",
+        "options": {
+          "systemMessage": "You are a creative advertising copywriter for Bifilo digital marketplace.\n\nYour task is to generate compelling ad content for multiple platforms:\n\n1. Instagram/Telegram:\n   - Short caption (150-200 characters)\n   - 10-15 relevant hashtags (Persian and English)\n   - Engaging CTA\n   - Appropriate emojis\n\n2. Twitter/X:\n   - 280-character tweet\n   - 3-5 hashtags\n   - Shortened link placeholder\n\n3. Google Ads:\n   - 3 headlines (max 30 characters each)\n   - 2 descriptions (max 90 characters each)\n   - Suggested keywords\n\nReturn JSON:\n{\n  \"instagram\": {\"caption\": \"...\", \"hashtags\": [\"...\"]},\n  \"twitter\": {\"tweet\": \"...\", \"hashtags\": [\"...\"]},\n  \"googleAds\": {\"headlines\": [\"...\"], \"descriptions\": [\"...\"], \"keywords\": [\"...\"]}\n}\n\nWrite in Persian with professional marketing tone."
+        }
+      },
+      "id": "cdb7535f-6822-43b3-8c71-85d69c3d17f4",
+      "name": "Ad Content Generator",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -752,
+        -1552
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "33f526be-9265-46d8-bfcb-446b36473254",
+      "name": "Gemini Model 2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        -1680
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "PCii8rJ3w6clWYJg",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "50f716c3-d67b-4aac-9ced-7b77d0fe8dc0",
+      "name": "Gemini Model 3",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        -1552
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "PCii8rJ3w6clWYJg",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "b6a3b20e-ea3b-408d-ac5c-bdf8b054324e",
+      "name": "Gemini Model 4",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -896,
+        -1408
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "PCii8rJ3w6clWYJg",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1FVkSg2bnPYjfbjiu0JeFL19f8z-5sFc7",
+          "mode": "id"
+        },
+        "event": "fileUpdated",
+        "options": {}
+      },
+      "id": "4b88d186-c5dc-4287-a234-d329581ed6f3",
+      "name": "New IDPLR Product Uploaded",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1520,
+        -1856
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "B6WlWjTn3FuCFFrV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "options": {
+          "binaryPropertyName": "data"
+        }
+      },
+      "id": "aab77f58-3a7d-458a-849d-a14e20299c25",
+      "name": "Download ZIP File",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1248,
+        -1856
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "B6WlWjTn3FuCFFrV",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "341f9873-8d59-44fc-b7a4-4e7d08afe22a",
+      "name": "Extract ZIP Contents",
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1,
+      "position": [
+        -1072,
+        -1904
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Find product_details.txt or license.txt file from decompressed items\nconst items = $input.all();\n\nfor (const item of items) {\n  if (item.binary) {\n    for (const [key, binaryData] of Object.entries(item.binary)) {\n      const fileName = binaryData.fileName || '';\n      \n      // Check if this is the product details or license file\n      if (fileName.toLowerCase().includes('product_details.txt') || \n          fileName.toLowerCase().includes('license.txt')) {\n        // Return only this file with its binary data preserved\n        return [{\n          json: {\n            fileName: fileName,\n            mimeType: binaryData.mimeType,\n            fileSize: binaryData.fileSize\n          },\n          binary: {\n            data: binaryData\n          }\n        }];\n      }\n    }\n  }\n}\n\n// If no matching file found, return empty array\nreturn [];"
+      },
+      "id": "80a08c9a-e9f3-4281-9ac1-aae3360e53e7",
+      "name": "Find Product Details File",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -896,
+        -1888
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "id": "e4ad0e7f-8047-476c-82aa-88b1fdfe99e3",
+      "name": "Extract Text from File",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -464,
+        -1888
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parse Product Details from extracted text\nconst extractedText = $input.item.json.data || '';\nconst triggerData = $('New IDPLR Product Uploaded').first().json;\n\n// Initialize result object\nconst productDetails = {\n  productTitle: '',\n  licenseType: '',\n  description: '',\n  driveLink: triggerData.webViewLink || triggerData.webContentLink || ''\n};\n\n// Extract Product Title\nconst titleMatch = extractedText.match(/(?:Product\\s*Title|Title|Product\\s*Name)\\s*:?\\s*([^\\n]+)/i);\nif (titleMatch) {\n  productDetails.productTitle = titleMatch[1].trim();\n}\n\n// Extract License Type\nconst licenseMatch = extractedText.match(/(?:License\\s*Type|License|Rights)\\s*:?\\s*([^\\n]+)/i);\nif (licenseMatch) {\n  productDetails.licenseType = licenseMatch[1].trim();\n}\n\n// Extract Description (multi-line)\nconst descMatch = extractedText.match(/(?:Description|Product\\s*Description)\\s*:?\\s*([\\s\\S]+?)(?=\\n\\n|License|Product\\s*Title|$)/i);\nif (descMatch) {\n  productDetails.description = descMatch[1].trim();\n} else {\n  // Fallback: use first 500 characters if no description found\n  productDetails.description = extractedText.substring(0, 500).trim();\n}\n\nreturn productDetails;"
+      },
+      "id": "976da4e4-c7c6-440a-803f-0e988e5c6ff6",
+      "name": "Parse Product Details",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        -1888
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1bgkk4T5omAfmdB5rIV0v6J_JTnmuqN5kTvGHDJurqIU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Downloadable_Products",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product_Name": "={{ $json.productTitle }}",
+            "License_Type": "={{ $json.licenseType }}",
+            "Description": "={{ $json.description }}",
+            "File_URL": "={{ $json.driveLink }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Product_Name",
+              "displayName": "Product_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "License_Type",
+              "displayName": "License_Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "File_URL",
+              "displayName": "File_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "48c509a2-1fad-4909-aef8-9734139cf61f",
+      "name": "Save to PLR Inventory",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -64,
+        -1888
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "iN8bORJRvHPUVIgD",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Bot Trigger').first().json.message.chat.id }}",
+        "text": "=✅ محصول IDPLR با موفقیت پردازش شد\n\n📦 عنوان: {{ $json.productTitle }}\n📜 نوع لایسنس: {{ $json.licenseType }}\n📎 لینک فایل: {{ $json.driveLink }}\n\n✨ محصول به موجودی PLR اضافه شد",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "a238cdab-157c-47e8-badc-89badf1999f9",
+      "name": "Send IDPLR Confirmation",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        112,
+        -1888
+      ],
+      "webhookId": "f467b893-3db8-4a28-ad46-86840e1911f5",
+      "credentials": {
+        "telegramApi": {
+          "id": "Mkx9AhsSvndGYUUb",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Bot Trigger": {
+      "main": [
+        [
+          {
+            "node": "Workflow Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Configuration": {
+      "main": [
+        [
+          {
+            "node": "Route Menu Selection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Menu Selection": {
+      "main": [
+        [
+          {
+            "node": "Check Site Health",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Products Excel",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Read Article Topics",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Products for Ads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Site Health": {
+      "main": [
+        [
+          {
+            "node": "SEO Analysis Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "SEO Analysis Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SEO Analysis Agent": {
+      "main": [
+        [
+          {
+            "node": "Send Health Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Products Excel": {
+      "main": [
+        [
+          {
+            "node": "Product Content Optimizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model 2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Product Content Optimizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Product Content Optimizer": {
+      "main": [
+        [
+          {
+            "node": "Download Product Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Product Image": {
+      "main": [
+        [
+          {
+            "node": "Add Watermark & Resize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Watermark & Resize": {
+      "main": [
+        [
+          {
+            "node": "Create WooCommerce Product",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create WooCommerce Product": {
+      "main": [
+        [
+          {
+            "node": "Send Product Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Article Topics": {
+      "main": [
+        [
+          {
+            "node": "Article Generator Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Article Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model 3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Article Generator Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Article Generator Agent": {
+      "main": [
+        [
+          {
+            "node": "Create Featured Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Featured Image": {
+      "main": [
+        [
+          {
+            "node": "Publish WordPress Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish WordPress Post": {
+      "main": [
+        [
+          {
+            "node": "Update Article Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Article Status": {
+      "main": [
+        [
+          {
+            "node": "Send Article Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Products for Ads": {
+      "main": [
+        [
+          {
+            "node": "Ad Content Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Model 4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ad Content Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ad Content Generator": {
+      "main": [
+        [
+          {
+            "node": "Save Ad Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Ad Content": {
+      "main": [
+        [
+          {
+            "node": "Send Ad Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Article Schedule": {
+      "main": [
+        [
+          {
+            "node": "Read Article Topics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Health Check Schedule": {
+      "main": [
+        [
+          {
+            "node": "Check Site Health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New IDPLR Product Uploaded": {
+      "main": [
+        [
+          {
+            "node": "Download ZIP File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download ZIP File": {
+      "main": [
+        [
+          {
+            "node": "Extract ZIP Contents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract ZIP Contents": {
+      "main": [
+        [
+          {
+            "node": "Find Product Details File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Product Details File": {
+      "main": [
+        [
+          {
+            "node": "Extract Text from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Text from File": {
+      "main": [
+        [
+          {
+            "node": "Parse Product Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Product Details": {
+      "main": [
+        [
+          {
+            "node": "Save to PLR Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to PLR Inventory": {
+      "main": [
+        [
+          {
+            "node": "Send IDPLR Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "021c841e-682f-44be-89cc-61ed1f65cc16",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "90ef43ae17949ae78c76975ec7a1bb1548031bf079b54734fd0b546db7b07dc1"
+  },
+  "id": "8eVJLpjXyfAh0PMZ",
+  "tags": []
+}
